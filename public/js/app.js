@@ -5370,15 +5370,36 @@ __webpack_require__.r(__webpack_exports__);
   name: 'ProductComponent',
   data: function data() {
     return {
-      products: []
+      products: [],
+      product: {
+        name: '',
+        price: ''
+      }
     };
   },
-  created: function created() {
-    var _this = this;
+  methods: {
+    view: function view() {
+      var _this = this;
 
-    axios.get('/api/product').then(function (response) {
-      _this.products = response.data;
-    });
+      axios.get('/api/product').then(function (response) {
+        _this.products = response.data;
+      });
+    },
+    store: function store() {
+      var _this2 = this;
+
+      axios.post('/api/product', this.product).then(function (response) {
+        _this2.view();
+
+        _this2.product = {
+          name: '',
+          price: ''
+        };
+      });
+    }
+  },
+  created: function created() {
+    this.view();
   }
 });
 
@@ -28095,7 +28116,80 @@ var render = function () {
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
-      _vm._m(1),
+      _c("div", { staticClass: "col-4" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("h4", { staticClass: "card-header" }, [_vm._v("Create")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function ($event) {
+                    $event.preventDefault()
+                    return _vm.store.apply(null, arguments)
+                  },
+                },
+              },
+              [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("label", [_vm._v("Name: ")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.product.name,
+                        expression: "product.name",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.product.name },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.product, "name", $event.target.value)
+                      },
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "form-group mt-3" }, [
+                  _c("label", [_vm._v("Price: ")]),
+                  _vm._v(" "),
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.product.price,
+                        expression: "product.price",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: { type: "number" },
+                    domProps: { value: _vm.product.price },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.product, "price", $event.target.value)
+                      },
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm._m(1),
+              ]
+            ),
+          ]),
+        ]),
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-8" }, [
         _c("table", { staticClass: "table" }, [
@@ -28158,38 +28252,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-4" }, [
-      _c("div", { staticClass: "card" }, [
-        _c("h4", { staticClass: "card-header" }, [_vm._v("Create")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "card-body" }, [
-          _c("form", { attrs: { action: "" } }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c("label", [_vm._v("Name: ")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "text" },
-              }),
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "form-group mt-3" }, [
-              _c("label", [_vm._v("Price: ")]),
-              _vm._v(" "),
-              _c("input", {
-                staticClass: "form-control",
-                attrs: { type: "number" },
-              }),
-            ]),
-            _vm._v(" "),
-            _c("button", { staticClass: "btn btn-primary mt-3" }, [
-              _c("i", { staticClass: "fas fa-save m-1" }),
-              _vm._v("Save"),
-            ]),
-          ]),
-        ]),
-      ]),
-    ])
+    return _c(
+      "button",
+      { staticClass: "btn btn-primary mt-3", attrs: { type: "submit" } },
+      [_c("i", { staticClass: "fas fa-save m-1" }), _vm._v("Save")]
+    )
   },
   function () {
     var _vm = this

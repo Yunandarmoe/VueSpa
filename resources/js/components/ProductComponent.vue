@@ -22,16 +22,16 @@
         <div class="card">
           <h4 class="card-header">Create</h4>
           <div class="card-body">
-            <form action="">
+            <form @submit.prevent="store">
               <div class="form-group">
                 <label>Name: </label>
-                <input type="text" class="form-control" />
+                <input v-model="product.name" type="text" class="form-control" />
               </div>
               <div class="form-group mt-3">
                 <label>Price: </label>
-                <input type="number" class="form-control" />
+                <input v-model="product.price" type="number" class="form-control" />
               </div>
-              <button class="btn btn-primary mt-3"><i class="fas fa-save m-1"></i>Save</button>
+              <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save m-1"></i>Save</button>
             </form>
           </div>
         </div>
@@ -68,14 +68,33 @@ export default {
   name: 'ProductComponent',
   data() {
     return {
-      products: []
+      products: [],
+      product: {
+        name: '',
+        price: ''
+      }
+    }
+  },
+  methods: {
+    view() {
+      axios.get('/api/product')
+      .then(response => {
+        this.products = response.data
+      })
+    },
+    store() {
+      axios.post('/api/product', this.product)
+      .then(response => {
+        this.view();
+        this.product = {
+          name: '',
+          price: ''
+        }
+      })
     }
   },
   created() {
-    axios.get('/api/product')
-    .then(response => {
-      this.products = response.data
-    })
+    this.view();
   }
 };
 </script>
