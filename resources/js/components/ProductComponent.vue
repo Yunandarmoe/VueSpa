@@ -47,19 +47,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Book</td>
-              <td>1000</td>
-              <td>
-                <button class="btn btn-success btn-sm"><i class="fas fa-edit m-1"></i>Edit</button>
-                <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt m-1"></i>Delete</button>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Pencil</td>
-              <td>500</td>
+            <tr v-for="product in products" :key="product.id">
+              <td>{{ product.id }}</td>
+              <td>{{ product.name }}</td>
+              <td>{{ product.price }}</td>
               <td>
                 <button class="btn btn-success btn-sm"><i class="fas fa-edit m-1"></i>Edit</button>
                 <button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt m-1"></i>Delete</button>
@@ -73,5 +64,18 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: 'ProductComponent',
+  data() {
+    return {
+      products: []
+    }
+  },
+  created() {
+    axios.get('/api/product')
+    .then(response => {
+      this.products = response.data
+    })
+  }
+};
 </script>
