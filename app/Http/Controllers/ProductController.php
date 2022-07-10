@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
-
-use function PHPSTORM_META\map;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 
 class ProductController extends Controller
 {
@@ -20,32 +19,13 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string',
-            'price' => 'required|numeric'
-        ], [
-            'name.required' => 'အမည် ဖြည့်ရန် လိုအပ်ပါသည်။',
-            'name.string' => 'အမည်သည် စာသား ဖြစ်ရပါမည်။',
-            'price.requried' => 'စျေးနှုန်း ဖြည့်ရန် လိုအပ်ပါသည်။',
-            'price.numeric' => 'စျေးနှုန်းသည် ဂဏန်း ဖြစ်ရပါမည်။'
-        ]);
         $product = Product::create($request->only('name', 'price'));
         return $product;
     }
@@ -63,32 +43,14 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductUpdateRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'nullable|string',
-            'price' => 'nullable|numeric'
-        ], [
-            'name.string' => 'အမည်သည် စာသား ဖြစ်ရပါမည်။',
-            'price.numeric' => 'စျေးနှုန်းသည် ဂဏန်း ဖြစ်ရပါမည်။'
-        ]);
         $product = Product::find($id);
         $product->update($request->only('name', 'price'));
         return $product;
