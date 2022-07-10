@@ -5366,14 +5366,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'ProductComponent',
+  name: "ProductComponent",
   data: function data() {
     return {
+      isEditMode: false,
       products: [],
       product: {
-        name: '',
-        price: ''
+        id: "",
+        name: "",
+        price: ""
       }
     };
   },
@@ -5381,20 +5402,53 @@ __webpack_require__.r(__webpack_exports__);
     view: function view() {
       var _this = this;
 
-      axios.get('/api/product').then(function (response) {
+      axios.get("/api/product").then(function (response) {
         _this.products = response.data;
       });
+    },
+    create: function create() {
+      this.isEditMode = false;
+      this.product.id = "";
+      this.product.name = "";
+      this.product.price = "";
     },
     store: function store() {
       var _this2 = this;
 
-      axios.post('/api/product', this.product).then(function (response) {
+      axios.post("/api/product", this.product).then(function (response) {
         _this2.view();
 
-        _this2.product = {
-          name: '',
-          price: ''
-        };
+        _this2.product.id = "";
+        _this2.product.name = "";
+        _this2.product.price = "";
+      });
+    },
+    edit: function edit(product) {
+      this.isEditMode = true;
+      this.product.id = product.id;
+      this.product.name = product.name;
+      this.product.price = product.price;
+    },
+    update: function update() {
+      var _this3 = this;
+
+      axios.put("/api/product/".concat(this.product.id), this.product).then(function (response) {
+        _this3.view();
+
+        _this3.product.id = "";
+        _this3.product.name = "";
+        _this3.product.price = "";
+      });
+    },
+    destroy: function destroy(id) {
+      var _this4 = this;
+
+      if (!confirm("Are you sure you want to delete?")) {
+        return;
+      }
+
+      axios["delete"]("/api/product/".concat(id)).then(function (response) {
+        return _this4.view();
       });
     }
   },
@@ -28113,12 +28167,27 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container my-5" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "row justify-content-end mb-3" }, [
+      _c("div", { staticClass: "col-4" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", on: { click: _vm.create } },
+          [
+            _c("i", { staticClass: "fas fa-plus-circle m-1" }),
+            _vm._v("Create\n      "),
+          ]
+        ),
+      ]),
+      _vm._v(" "),
+      _vm._m(0),
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-4" }, [
         _c("div", { staticClass: "card" }, [
-          _c("h4", { staticClass: "card-header" }, [_vm._v("Create")]),
+          _c("h4", { staticClass: "card-header" }, [
+            _vm._v(_vm._s(_vm.isEditMode ? "Edit" : "Create")),
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c(
@@ -28205,7 +28274,39 @@ var render = function () {
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(product.price))]),
                 _vm._v(" "),
-                _vm._m(3, true),
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-success btn-sm",
+                      on: {
+                        click: function ($event) {
+                          return _vm.edit(product)
+                        },
+                      },
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-edit m-1" }),
+                      _vm._v("Edit\n              "),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger btn-sm",
+                      on: {
+                        click: function ($event) {
+                          return _vm.destroy(product.id)
+                        },
+                      },
+                    },
+                    [
+                      _c("i", { staticClass: "fas fa-trash-alt m-1" }),
+                      _vm._v("Delete\n              "),
+                    ]
+                  ),
+                ]),
               ])
             }),
             0
@@ -28220,29 +28321,20 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row justify-content-end mb-3" }, [
-      _c("div", { staticClass: "col-4" }, [
-        _c("button", { staticClass: "btn btn-primary" }, [
-          _c("i", { staticClass: "fas fa-plus-circle m-1" }),
-          _vm._v("Create"),
-        ]),
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-4" }, [
-        _c("form", { attrs: { action: "" } }, [
-          _c("div", { staticClass: "input-group" }, [
-            _c("input", {
-              staticClass: "form-control",
-              attrs: { type: "text", placeholder: "Search" },
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-group-append" }, [
-              _c(
-                "button",
-                { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-                [_c("i", { staticClass: "fas fa-search" })]
-              ),
-            ]),
+    return _c("div", { staticClass: "col-4" }, [
+      _c("form", { attrs: { action: "" } }, [
+        _c("div", { staticClass: "input-group" }, [
+          _c("input", {
+            staticClass: "form-control",
+            attrs: { type: "text", placeholder: "Search" },
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group-append" }, [
+            _c(
+              "button",
+              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+              [_c("i", { staticClass: "fas fa-search" })]
+            ),
           ]),
         ]),
       ]),
@@ -28255,7 +28347,10 @@ var staticRenderFns = [
     return _c(
       "button",
       { staticClass: "btn btn-primary mt-3", attrs: { type: "submit" } },
-      [_c("i", { staticClass: "fas fa-save m-1" }), _vm._v("Save")]
+      [
+        _c("i", { staticClass: "fas fa-save m-1" }),
+        _vm._v("Save\n            "),
+      ]
     )
   },
   function () {
@@ -28271,22 +28366,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Price")]),
         _vm._v(" "),
         _c("th", [_vm._v("Action")]),
-      ]),
-    ])
-  },
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c("button", { staticClass: "btn btn-success btn-sm" }, [
-        _c("i", { staticClass: "fas fa-edit m-1" }),
-        _vm._v("Edit"),
-      ]),
-      _vm._v(" "),
-      _c("button", { staticClass: "btn btn-danger btn-sm" }, [
-        _c("i", { staticClass: "fas fa-trash-alt m-1" }),
-        _vm._v("Delete"),
       ]),
     ])
   },
