@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
+use function PHPSTORM_META\map;
+
 class ProductController extends Controller
 {
     /**
@@ -35,6 +37,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric'
+        ], [
+            'name.required' => 'အမည် ဖြည့်ရန် လိုအပ်ပါသည်။',
+            'name.string' => 'အမည်သည် စာသား ဖြစ်ရပါမည်။',
+            'price.requried' => 'စျေးနှုန်း ဖြည့်ရန် လိုအပ်ပါသည်။',
+            'price.numeric' => 'စျေးနှုန်းသည် ဂဏန်း ဖြစ်ရပါမည်။'
+        ]);
         $product = Product::create($request->only('name', 'price'));
         return $product;
     }
@@ -71,6 +82,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'nullable|string',
+            'price' => 'nullable|numeric'
+        ], [
+            'name.string' => 'အမည်သည် စာသား ဖြစ်ရပါမည်။',
+            'price.numeric' => 'စျေးနှုန်းသည် ဂဏန်း ဖြစ်ရပါမည်။'
+        ]);
         $product = Product::find($id);
         $product->update($request->only('name', 'price'));
         return $product;
