@@ -5385,11 +5385,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "ProductComponent",
   data: function data() {
     return {
       isEditMode: false,
+      search: '',
       products: [],
       product: {
         id: "",
@@ -5399,11 +5401,19 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    view: function view() {
+    searchProduct: function searchProduct() {
       var _this = this;
 
-      axios.get("/api/product").then(function (response) {
-        _this.products = response.data;
+      axios.get("/api/product?search=" + this.search).then(function (response) {
+        return _this.products = response.data;
+      });
+    },
+    view: function view() {
+      var _this2 = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get("/api/product?page=" + page).then(function (response) {
+        _this2.products = response.data;
       });
     },
     create: function create() {
@@ -5413,14 +5423,14 @@ __webpack_require__.r(__webpack_exports__);
       this.product.price = "";
     },
     store: function store() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.post("/api/product", this.product).then(function (response) {
-        _this2.view();
+        _this3.view();
 
-        _this2.product.id = "";
-        _this2.product.name = "";
-        _this2.product.price = "";
+        _this3.product.id = "";
+        _this3.product.name = "";
+        _this3.product.price = "";
       });
     },
     edit: function edit(product) {
@@ -5430,25 +5440,25 @@ __webpack_require__.r(__webpack_exports__);
       this.product.price = product.price;
     },
     update: function update() {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.put("/api/product/".concat(this.product.id), this.product).then(function (response) {
-        _this3.view();
+        _this4.view();
 
-        _this3.product.id = "";
-        _this3.product.name = "";
-        _this3.product.price = "";
+        _this4.product.id = "";
+        _this4.product.name = "";
+        _this4.product.price = "";
       });
     },
     destroy: function destroy(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       if (!confirm("Are you sure you want to delete?")) {
         return;
       }
 
       axios["delete"]("/api/product/".concat(id)).then(function (response) {
-        return _this4.view();
+        return _this5.view();
       });
     }
   },
@@ -5467,7 +5477,8 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
+window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]); //Vue.component('pagination', require('laravel-vue-pagination'));
+
 Vue.component('example-component', (__webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]));
 Vue.component('product-component', (__webpack_require__(/*! ./components/ProductComponent.vue */ "./resources/js/components/ProductComponent.vue")["default"]));
 var app = new Vue({
@@ -28179,7 +28190,46 @@ var render = function () {
         ),
       ]),
       _vm._v(" "),
-      _vm._m(0),
+      _c("div", { staticClass: "col-4" }, [
+        _c(
+          "form",
+          {
+            on: {
+              submit: function ($event) {
+                $event.preventDefault()
+                return _vm.searchProduct.apply(null, arguments)
+              },
+            },
+          },
+          [
+            _c("div", { staticClass: "input-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.search,
+                    expression: "search",
+                  },
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text", placeholder: "Search" },
+                domProps: { value: _vm.search },
+                on: {
+                  input: function ($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.search = $event.target.value
+                  },
+                },
+              }),
+              _vm._v(" "),
+              _vm._m(0),
+            ]),
+          ]
+        ),
+      ]),
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
@@ -28321,23 +28371,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-4" }, [
-      _c("form", { attrs: { action: "" } }, [
-        _c("div", { staticClass: "input-group" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", placeholder: "Search" },
-          }),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group-append" }, [
-            _c(
-              "button",
-              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-              [_c("i", { staticClass: "fas fa-search" })]
-            ),
-          ]),
-        ]),
-      ]),
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fas fa-search" })]
+      ),
     ])
   },
   function () {
